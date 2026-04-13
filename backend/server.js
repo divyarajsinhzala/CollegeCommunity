@@ -38,7 +38,7 @@ app.use("/api/messages", protect, admin, messageRoutes);
 // Socket.io Setup
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: "https://collegecommunity-backend.onrender.com", methods: ["GET", "POST"] },
+  cors: { origin: "https://collegecommunity.onrender.com", methods: ["GET", "POST"] },
 });
 
 io.on("connection", (socket) => {

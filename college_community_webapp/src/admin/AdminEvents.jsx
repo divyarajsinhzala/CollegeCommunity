@@ -14,7 +14,7 @@ function AdminEvents() {
     const user = getUser();
     if (!user.token) return;
     try {
-      const response = await fetch("http://localhost:5000/api/events", {
+      const response = await fetch("https://collegecommunity-backend.onrender.com/api/events", {
         headers: { "Authorization": `Bearer ${user.token}` }
       });
       const data = await response.json();
@@ -38,7 +38,7 @@ function AdminEvents() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/events", {
+      const res = await fetch("https://collegecommunity-backend.onrender.com/api/events", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ function AdminEvents() {
                       onClick={async () => {
                         const user = getUser();
                         if (window.confirm("Delete this event?")) {
-                          await fetch(`http://localhost:5000/api/events/${e._id}`, {
+                          await fetch(`https://collegecommunity-backend.onrender.com/api/events/${e._id}`, {
                             method: "DELETE",
                             headers: { "Authorization": `Bearer ${user.token}` }
                           });

@@ -8,7 +8,7 @@ function AdminUsers() {
   const fetchUsers = async () => {
     const adminData = JSON.parse(localStorage.getItem("user") || "{}");
     try {
-      const response = await fetch("http://localhost:5000/api/users", {
+      const response = await fetch("https://collegecommunity-backend.onrender.com/api/users", {
         headers: { "Authorization": `Bearer ${adminData.token}` }
       });
       const data = await response.json();
@@ -26,7 +26,7 @@ function AdminUsers() {
     const adminData = JSON.parse(localStorage.getItem("user") || "{}");
     if (!window.confirm("Permanent Deletion of User. Proceed?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/users/${id}`, { 
+      const res = await fetch(`https://collegecommunity-backend.onrender.com/api/users/${id}`, { 
         method: "DELETE",
         headers: { "Authorization": `Bearer ${adminData.token}` }
       });

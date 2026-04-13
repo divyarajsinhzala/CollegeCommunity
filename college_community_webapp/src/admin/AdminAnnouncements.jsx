@@ -10,7 +10,7 @@ function AdminAnnouncements() {
   // 1. Fetch All Announcements from MongoDB
   const fetchAnnouncements = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/announcements");
+      const res = await fetch("https://collegecommunity-backend.onrender.com/api/announcements");
       const data = await res.json();
       // Ensure we always have an array even if database is empty
       setAnnouncements(Array.isArray(data) ? data : []);
@@ -31,7 +31,7 @@ function AdminAnnouncements() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     
     try {
-      const res = await fetch("http://localhost:5000/api/announcements", {
+      const res = await fetch("https://collegecommunity-backend.onrender.com/api/announcements", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -58,7 +58,7 @@ function AdminAnnouncements() {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (window.confirm("Are you sure you want to delete this broadcast?")) {
       try {
-        const res = await fetch(`http://localhost:5000/api/announcements/${id}`, { 
+        const res = await fetch(`https://collegecommunity-backend.onrender.com/api/announcements/${id}`, { 
           method: "DELETE",
           headers: { 
             "Authorization": `Bearer ${user.token}` 

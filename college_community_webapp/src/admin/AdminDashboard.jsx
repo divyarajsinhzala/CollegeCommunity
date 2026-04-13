@@ -20,8 +20,8 @@ function AdminDashboard() {
 
       // Fetch Events and Users in parallel
       const [eventRes, userRes] = await Promise.all([
-        fetch("http://localhost:5000/api/events", { headers }),
-        fetch("http://localhost:5000/api/users", { headers })
+        fetch("https://collegecommunity-backend.onrender.com/api/events", { headers }),
+        fetch("https://collegecommunity-backend.onrender.com/api/users", { headers })
       ]);
 
       const events = eventRes.ok ? await eventRes.json() : [];

@@ -10,7 +10,7 @@ function Events() {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/events", {
+      const response = await fetch("https://collegecommunity-backend.onrender.com/api/events", {
         headers: {
           "Authorization": `Bearer ${user?.token}`
         }
@@ -36,7 +36,7 @@ function Events() {
     if (!user.id) return alert("User ID not found. Please log in again.");
     
     try {
-      const res = await fetch(`http://localhost:5000/api/events/${eventId}/join`, {
+      const res = await fetch(`https://collegecommunity-backend.onrender.com/api/events/${eventId}/join`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -59,7 +59,7 @@ function Events() {
   const handleUnregister = async (eventId) => {
     if (!window.confirm("Do you want to unregister?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/events/${eventId}/leave`, {
+      const res = await fetch(`https://collegecommunity-backend.onrender.com/api/events/${eventId}/leave`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

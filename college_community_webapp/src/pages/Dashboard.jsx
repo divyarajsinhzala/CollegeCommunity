@@ -14,7 +14,7 @@ function Dashboard() {
     if (!user?.token) return;
 
     try {
-      const res = await fetch("http://localhost:5000/api/events", {
+      const res = await fetch("https://collegecommunity-backend.onrender.com/api/events", {
         headers: { 
           "Authorization": `Bearer ${user.token}`,
           "Content-Type": "application/json" 

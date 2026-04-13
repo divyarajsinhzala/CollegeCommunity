@@ -10,7 +10,7 @@ function AdminPosts() {
 
   const fetchPosts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/messages", {
+      const response = await fetch("https://collegecommunity-backend.onrender.com/api/messages", {
         headers: {
           "Authorization": `Bearer ${user?.token}`
         }
@@ -30,7 +30,7 @@ function AdminPosts() {
 
   const toggleVisibility = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/messages/${id}/toggle`, {
+      const response = await fetch(`https://collegecommunity-backend.onrender.com/api/messages/${id}/toggle`, {
         method: "PATCH",
         headers: {
           "Authorization": `Bearer ${user?.token}`,
@@ -55,7 +55,7 @@ function AdminPosts() {
   const removePost = async (id) => {
     if (!window.confirm("Are you sure you want to delete this post permanently?")) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/messages/${id}`, {
+      const response = await fetch(`https://collegecommunity-backend.onrender.com/api/messages/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${user?.token}`

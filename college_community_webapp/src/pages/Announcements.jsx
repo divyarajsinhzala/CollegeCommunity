@@ -9,7 +9,7 @@ function Announcements() {
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/announcements");
+        const response = await fetch("https://collegecommunity-backend.onrender.com/api/announcements");
         const data = await response.json();
         // Ensure data is sorted newest first
         const sortedData = Array.isArray(data) ? data.reverse() : [];

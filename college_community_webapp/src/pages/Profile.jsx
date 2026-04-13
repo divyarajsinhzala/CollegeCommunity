@@ -27,7 +27,7 @@ function Profile() {
     e.preventDefault();
     setStatus({ msg: "Processing...", type: "" });
     try {
-      const res = await fetch(`http://localhost:5000/api/users/${user.id}`, {
+      const res = await fetch(`https://collegecommunity-backend.onrender.com/api/users/${user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

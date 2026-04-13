@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import UserLayout from "../layouts/UserLayout";
 
 // Initialize socket - passing token for future auth integration if needed
-const socket = io("http://localhost:5000");
+const socket = io("https://collegecommunity-backend.onrender.com");
 
 const groups = [
   { id: 1, name: "AI Club" },

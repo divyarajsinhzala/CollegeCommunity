@@ -1,0 +1,116 @@
+﻿@model CollegeCommunity.ViewModels.LoginViewModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - College Community</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="~/Content/css/variable.css?v=5" rel="stylesheet" />
+    <link href="~/Content/css/components.css?v=5" rel="stylesheet" />
+
+    <style>
+        body {
+            background-color: var(--color-background);
+            background-image: linear-gradient(rgba(11, 25, 48, 0.8), rgba(11, 25, 48, 0.9)), url('/Content/images/Cool Blue Educational Icon Pattern.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: var(--color-text-primary);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 30px;
+            margin: auto;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+                color: var(--color-text-secondary);
+            }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+            .password-toggle:hover {
+                color: var(--color-text-primary);
+            }
+    </style>
+</head>
+<body>
+
+    <div class="card glass-panel auth-card">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <i class="fa-solid fa-graduation-cap" style="font-size: 3rem; color: var(--color-accent); margin-bottom: 15px;"></i>
+            <h2 style="margin: 0; font-size: 1.8rem;">Welcome Back</h2>
+            <p style="color: var(--color-text-secondary); margin-top: 5px;">Sign in with your College ID</p>
+        </div>
+
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @style = "color: var(--color-danger); font-size: 0.85rem; margin-bottom: 15px; text-align: center; background: rgba(230,90,107,0.1); padding: 10px; border-radius: 8px;" })
+
+            <div class="input-group">
+                <label>Enrollment / GR Number</label>
+                @Html.TextBoxFor(m => m.IdentifierNumber, new { @class = "form-control", placeholder = "Enter your ID", autocomplete = "username" })
+                @Html.ValidationMessageFor(m => m.IdentifierNumber, "", new { @style = "color: var(--color-danger); font-size: 0.8rem; display: block; margin-top: 5px;" })
+            </div>
+
+            <div class="input-group" style="position: relative;">
+                <label>Password</label>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "••••••••", id = "passwordInput", style = "padding-right: 40px;", autocomplete = "current-password" })
+                <i class="fa-solid fa-eye password-toggle" id="togglePasswordBtn"></i>
+                @Html.ValidationMessageFor(m => m.Password, "", new { @style = "color: var(--color-danger); font-size: 0.8rem; display: block; margin-top: 5px;" })
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; margin-top: 10px; font-size: 1rem;">
+                Sign In <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        }
+    </div>
+
+    <script>
+        document.getElementById('togglePasswordBtn').addEventListener('click', function () {
+            var pwdInput = document.getElementById('passwordInput');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }
+        });
+    </script>
+</body>
+</html>

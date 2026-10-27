@@ -1,0 +1,173 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var userName = Session["UserName"] != null ? Session["UserName"].ToString() : "Student";
+    var branch = Session["Branch"] != null ? Session["Branch"].ToString() : "College Community";
+    var avatarName = Uri.EscapeDataString(userName);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - College Community</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="~/Content/css/variable.css?v=2" rel="stylesheet" />
+    <link href="~/Content/css/layout.css?v=8" rel="stylesheet" />
+    <link href="~/Content/css/components.css?v=2" rel="stylesheet" />
+</head>
+<body>
+    <div class="app-container">
+
+        <aside class="sidebar glass-panel" id="mainSidebar">
+            <div style="display: flex; flex-direction: column; height: 100%;">
+                <div class="sidebar-brand">
+                    <i class="fa-solid fa-graduation-cap" id="sidebarToggle" title="Toggle Sidebar" style="cursor:pointer;"></i>
+                    <div class="sidebar-text">
+                        <h3 style="margin:0; font-size:1.1rem; color:var(--color-text-primary);">College Community</h3>
+                        <small style="color:var(--color-text-secondary); font-size:0.75rem;">Connect • Participate • Grow</small>
+                    </div>
+                </div>
+
+                <div class="sidebar-scroll-area">
+                    <nav class="sidebar-nav">
+                        <a href="@Url.Action("Index", "Dashboard", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "Dashboard", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-house"></i> <span class="sidebar-text">Home</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Events", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "Events", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-regular fa-calendar"></i> <span class="sidebar-text">Events</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Announcements", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "Announcements", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-bullhorn"></i> <span class="sidebar-text">Announcements</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Clubs", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "Clubs", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-users"></i> <span class="sidebar-text">Clubs</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Chat", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "Chat", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-regular fa-comment"></i> <span class="sidebar-text">Chat</span>
+                        </a>
+                        <a href="@Url.Action("Index", "About", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "About", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-circle-info"></i> <span class="sidebar-text">About</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Help", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "Help", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-solid fa-circle-question"></i> <span class="sidebar-text">Help</span>
+                        </a>
+                        <a href="@Url.Action("Index", "Profile", new { area = "Student" })" class="nav-link @(string.Equals(currentController, "Profile", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                            <i class="fa-regular fa-user"></i> <span class="sidebar-text">Profile</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-navbar glass-panel">
+                <div class="search-wrapper" id="searchContainer">
+                    <i class="fa-solid fa-magnifying-glass" style="color: var(--color-text-secondary); font-size: 0.95rem; flex-shrink: 0;"></i>
+                    <input type="text" id="globalSearchInput" placeholder="Search events, clubs, or people..." autocomplete="off" />
+                    <i class="fa-solid fa-xmark clear-search-icon" id="clearSearchBtn" title="Clear search" style="flex-shrink: 0;"></i>
+                    <div class="search-results-overlay" id="searchResultsOverlay"></div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <!-- Notification Bell has been completely removed -->
+                    <!-- Profile Dropdown -->
+                    <div style="position: relative;" id="profileDropdownContainer">
+                        <div style="display: flex; align-items: center; gap: 12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px; cursor: pointer;" id="profileToggleBtn">
+                            <div style="width: 35px; height: 35px; background: url('https://ui-avatars.com/api/?name=@avatarName&background=38c6c0&color=fff') center/cover; border-radius: 50%; box-shadow: 2px 2px 8px rgba(0,0,0,0.5);"></div>
+                            <div style="line-height: 1.2;">
+                                <div style="font-weight: 600; font-size: 0.9rem;">@userName</div>
+                                <div style="font-size: 0.75rem; color: var(--color-text-secondary);">@branch</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: 5px; color: var(--color-text-secondary);"></i>
+                        </div>
+
+                        <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                            <a href="@Url.Action("Index", "Profile", new { area = "Student" })"><i class="fa-regular fa-user"></i> My Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@Url.Action("Logout", "Account", new { area = "" })" style="color: var(--color-danger);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="render-body">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        (function () {
+            document.addEventListener("DOMContentLoaded", function () {
+                var studentSiteData = [
+                    { title: "Upcoming Events", type: "Page", icon: "fa-regular fa-calendar", url: "@Url.Action("Index", "Events", new { area = "Student" })" },
+                    { title: "Explore Clubs", type: "Page", icon: "fa-solid fa-users", url: "@Url.Action("Index", "Clubs", new { area = "Student" })" },
+                    { title: "My Profile", type: "Page", icon: "fa-regular fa-user", url: "@Url.Action("Index", "Profile", new { area = "Student" })" },
+                    { title: "College General Chat", type: "Chat", icon: "fa-regular fa-comments", url: "@Url.Action("Index", "Chat", new { area = "Student" })" }
+                ];
+
+                var stuSidebarToggle = document.querySelector('#sidebarToggle');
+                var stuMainSidebar = document.querySelector('#mainSidebar');
+                if (stuSidebarToggle && stuMainSidebar) {
+                    stuSidebarToggle.onclick = function () { stuMainSidebar.classList.toggle('collapsed'); };
+                }
+
+                var stuProfileToggle = document.querySelector('#profileToggleBtn');
+                var stuProfileMenu = document.querySelector('#profileDropdownMenu');
+                if (stuProfileToggle && stuProfileMenu) {
+                    stuProfileToggle.onclick = function (e) {
+                        e.stopPropagation();
+                        stuProfileMenu.classList.toggle('show');
+                    };
+                }
+
+                var stuSearchInput = document.querySelector('input#globalSearchInput');
+                var stuSearchOverlay = document.querySelector('#searchResultsOverlay');
+                var stuClearBtn = document.querySelector('#clearSearchBtn');
+
+                if (stuSearchInput && stuSearchOverlay && stuClearBtn) {
+                    stuSearchInput.oninput = function () {
+                        var currentQuery = stuSearchInput.value.toLowerCase().trim();
+                        stuSearchOverlay.innerHTML = '';
+                        if (currentQuery.length > 0) {
+                            stuClearBtn.classList.add('visible');
+                            var matchedResults = studentSiteData.filter(function (item) { return item.title.toLowerCase().indexOf(currentQuery) > -1 || item.type.toLowerCase().indexOf(currentQuery) > -1; });
+                            if (matchedResults.length > 0) {
+                                for (var i = 0; i < matchedResults.length; i++) {
+                                    var linkNode = document.createElement('a');
+                                    linkNode.href = matchedResults[i].url;
+                                    linkNode.className = 'search-item';
+                                    linkNode.innerHTML = '<i class="' + matchedResults[i].icon + '"></i><div style="flex:1;"><div style="font-weight: 500;">' + matchedResults[i].title + '</div><div style="font-size: 0.7rem; color: var(--color-text-secondary);">' + matchedResults[i].type + '</div></div>';
+                                    stuSearchOverlay.appendChild(linkNode);
+                                }
+                            } else { stuSearchOverlay.innerHTML = '<div style="padding: 15px; color: var(--color-text-secondary); text-align: center;">No results found</div>'; }
+                            stuSearchOverlay.classList.add('show');
+                        } else {
+                            stuClearBtn.classList.remove('visible');
+                            stuSearchOverlay.classList.remove('show');
+                        }
+                    };
+                    stuClearBtn.onclick = function () {
+                        stuSearchInput.value = '';
+                        stuClearBtn.classList.remove('visible');
+                        stuSearchOverlay.classList.remove('show');
+                        stuSearchInput.focus();
+                    };
+                }
+
+                document.onclick = function (e) {
+                    var stuSearchWrap = document.querySelector('#searchContainer');
+                    var stuProfileWrap = document.querySelector('#profileDropdownContainer');
+                    if (stuSearchWrap && typeof stuSearchWrap.contains === 'function' && !stuSearchWrap.contains(e.target)) {
+                        if(stuSearchOverlay) stuSearchOverlay.classList.remove('show');
+                    }
+                    if (stuProfileWrap && typeof stuProfileWrap.contains === 'function' && !stuProfileWrap.contains(e.target)) {
+                        if(stuProfileMenu) stuProfileMenu.classList.remove('show');
+                    }
+                };
+            });
+        })();
+    </script>
+</body>
+</html>

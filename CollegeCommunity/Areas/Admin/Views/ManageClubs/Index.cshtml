@@ -1,0 +1,67 @@
+﻿@model IEnumerable<CollegeCommunity.Models.Club>
+@{
+    ViewBag.Title = "Manage Clubs";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var counts = ViewBag.MemberCounts as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+
+<div class="card glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <h2 style="margin: 0;"><i class="fa-solid fa-users" style="color: var(--color-accent); margin-right: 10px;"></i> Club Directory</h2>
+        <a href="@Url.Action("Create")" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Create New Club</a>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="border-bottom: 2px solid rgba(255,255,255,0.1); color: var(--color-text-secondary);">
+                    <th style="padding: 12px 10px;">Club Name</th>
+                    <th style="padding: 12px 10px;">Enrolled Members</th>
+                    <th style="padding: 12px 10px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var club in Model)
+                    {
+                        int memberCount = counts.ContainsKey(club.Id) ? counts[club.Id] : 0;
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px 10px; font-weight: 500;">@club.Name</td>
+                            <td style="padding: 12px 10px; color: var(--color-accent);">@memberCount Students</td>
+                            <td style="padding: 12px 10px;">
+                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+
+                                    <!-- Edit Club -->
+                                    <a href="@Url.Action("Edit", new { id = club.Id })" class="btn" style="background: rgba(255,255,255,0.1); padding: 6px 12px; font-size: 0.85rem;" title="Edit Club Details">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+
+                                    <!-- Manage Roster -->
+                                    <a href="@Url.Action("Members", new { id = club.Id })" class="btn" style="background: rgba(56, 198, 192, 0.15); color: var(--color-accent) !important; padding: 6px 12px; font-size: 0.85rem;">
+                                        <i class="fa-solid fa-list-check"></i> Roster
+                                    </a>
+
+                                    <!-- Delete Club -->
+                                    @using (Html.BeginForm("Delete", "ManageClubs", new { id = club.Id }, FormMethod.Post, new { style = "margin: 0;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn" style="background: rgba(230, 90, 107, 0.15); color: var(--color-danger) !important; padding: 6px 12px; font-size: 0.85rem;" title="Delete Club Permanently" onclick="return confirm('Delete @club.Name permanently? All chat records and memberships will be destroyed.');">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" style="text-align: center; padding: 30px; color: var(--color-text-secondary);">No clubs have been created yet.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

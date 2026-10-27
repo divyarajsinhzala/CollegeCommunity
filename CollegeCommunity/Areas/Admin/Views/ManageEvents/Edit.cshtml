@@ -1,0 +1,54 @@
+﻿@model CollegeCommunity.Models.Event
+@{
+    ViewBag.Title = "Edit Event";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card glass-panel" style="max-width: 700px; margin: 0 auto;">
+    <div style="margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <h2 style="margin: 0;"><i class="fa-solid fa-pen-to-square" style="color: var(--color-accent); margin-right: 10px;"></i> Edit Event</h2>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.Id)
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            @Html.ValidationSummary(true, "", new { @style = "color: var(--color-danger);" })
+
+            <div>
+                <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Event Title</label>
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @style = "color: var(--color-danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div>
+                    <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Date & Time</label>
+                    @Html.EditorFor(model => model.EventDate, new { htmlAttributes = new { @class = "form-control", type = "datetime-local" } })
+                    @Html.ValidationMessageFor(model => model.EventDate, "", new { @style = "color: var(--color-danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+                </div>
+                <div>
+                    <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Location (Room / Venue)</label>
+                    @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+
+            <div>
+                <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Image URL (Optional)</label>
+                @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+
+            <div>
+                <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Description</label>
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @style = "min-height: 120px; resize: vertical;" })
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                <button type="submit" class="btn btn-primary" style="padding: 10px 25px;"><i class="fa-solid fa-floppy-disk"></i> Update Event</button>
+                <a href="@Url.Action("Index")" class="btn" style="background: rgba(255,255,255,0.1); color: #fff !important; text-decoration: none !important; padding: 10px 25px;">Cancel</a>
+            </div>
+        </div>
+    }
+</div>

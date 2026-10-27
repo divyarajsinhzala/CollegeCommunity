@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Student Guidelines";
+    Layout = "~/Areas/Student/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div class="card glass-panel" style="max-width: 800px; margin: 0 auto; padding: 40px;">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">
+        <a href="@Url.Action("Index")" class="btn" style="background: rgba(255,255,255,0.1); padding: 8px 15px;"><i class="fa-solid fa-arrow-left"></i></a>
+        <h2 style="margin: 0;">Official Student Guidelines</h2>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 30px;">
+        <div>
+            <h3 style="color: var(--color-accent); margin-top: 0;"><i class="fa-solid fa-shield-halved" style="margin-right: 10px;"></i> 1. Code of Conduct</h3>
+            <p style="color: var(--color-text-secondary); line-height: 1.6;">All students are expected to maintain professional and respectful behavior across all digital spaces provided by the college. Harassment, discrimination, or abusive language in club chatrooms will result in immediate suspension of portal access.</p>
+        </div>
+
+        <div>
+            <h3 style="color: var(--color-primary-light); margin-top: 0;"><i class="fa-solid fa-comments" style="margin-right: 10px;"></i> 2. Chatroom Usage</h3>
+            <ul style="color: var(--color-text-secondary); line-height: 1.6; padding-left: 20px;">
+                <li>Keep conversations relevant to the club's specific topic.</li>
+                <li>Do not share sensitive personal information or passwords.</li>
+                <li>Administrators monitor all chats and can revoke membership for violations.</li>
+                <li>During exam weeks, global chat locks may be enacted by administration.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 style="color: #f4b400; margin-top: 0;"><i class="fa-solid fa-calendar-check" style="margin-right: 10px;"></i> 3. Event Registration</h3>
+            <p style="color: var(--color-text-secondary); line-height: 1.6;">Event registrations are final. If you register for an event, you are expected to attend. Repeated no-shows may lead to a temporary ban from future college events.</p>
+        </div>
+
+        <div>
+            <h3 style="color: #e65a6b; margin-top: 0;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 10px;"></i> 4. Reporting Issues</h3>
+            <p style="color: var(--color-text-secondary); line-height: 1.6;">If you encounter bugs or witness violations of these guidelines, utilize the "Contact Administration" form on the main Help Center page. False reporting is strictly prohibited.</p>
+        </div>
+    </div>
+</div>

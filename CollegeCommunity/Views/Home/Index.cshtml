@@ -1,0 +1,164 @@
+﻿
+@{
+    ViewBag.Title = "College Community";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title</title>
+
+    <link href="@Url.Content("~/Content/css/variable.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/css/layout.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/css/components.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/css/landing.css")" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="landing-page">
+
+    <div class="landing-ambient landing-ambient-one" aria-hidden="true"></div>
+    <div class="landing-ambient landing-ambient-two" aria-hidden="true"></div>
+    <div class="landing-decoration landing-decoration-books" aria-hidden="true">
+        <i class="fa-solid fa-book-open"></i>
+    </div>
+    <div class="landing-decoration landing-decoration-spark" aria-hidden="true">
+        <i class="fa-solid fa-sparkles"></i>
+    </div>
+
+    <main class="landing-container">
+
+        <nav class="landing-nav glass-panel">
+            <a href="@Url.Action("Index", "Home")" class="landing-brand" aria-label="College Community home">
+                <span class="landing-brand-icon" aria-hidden="true">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </span>
+                <span class="landing-brand-text">
+                    <strong>College Community</strong>
+                    <small>Connect · Participate · Grow</small>
+                </span>
+            </a>
+
+            <a href="@Url.Action("Login", "Account")" class="btn btn-primary landing-login-top">
+                Login <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+        </nav>
+
+        <section class="landing-hero">
+            <div class="landing-content">
+                <div class="landing-eyebrow">
+                    <span class="landing-eyebrow-dot"></span>
+                    YOUR CAMPUS. YOUR COMMUNITY.
+                </div>
+
+                <h1>Connect.<br /><span>Participate.</span><br />Belong.</h1>
+
+                <p class="landing-description">
+                    Stay connected with your college community.
+                    Discover upcoming events, keep up with important
+                    announcements, and participate in campus life
+                    from one place.
+                </p>
+
+                <a href="@Url.Action("Login", "Account")" class="btn btn-primary landing-login-button">
+                    Login to Your Account
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </a>
+
+                <div class="landing-note">
+                    <span class="landing-note-line"></span>
+                    One community. Everything happening on campus.
+                </div>
+
+                <div class="landing-orbit-label" aria-hidden="true">
+                    <span class="landing-orbit-dot"></span>
+                    A space to connect and grow
+                </div>
+            </div>
+
+            <div class="landing-visual">
+                <div class="landing-card-glow" aria-hidden="true"></div>
+
+                <div class="landing-card glass-panel">
+                    <div class="landing-card-topline">
+                        <small>CAMPUS / COMMUNITY</small>
+                    </div>
+
+                    <div class="landing-card-header">
+                        <div class="landing-card-heading">
+                            <span class="landing-card-label">YOUR CAMPUS, CONNECTED</span>
+                            <h2>Your community hub</h2>
+                            <p>Everything you need, in one place.</p>
+                        </div>
+
+                        <span class="landing-card-logo" aria-hidden="true">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </span>
+                    </div>
+
+                    <div class="landing-card-accent"><span></span></div>
+
+                    <div class="landing-feature">
+                        <span class="landing-feature-icon events">
+                            <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                        </span>
+                        <div class="landing-feature-text">
+                            <h3>College Events</h3>
+                            <p>Discover events and RSVP</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square landing-feature-arrow" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="landing-feature">
+                        <span class="landing-feature-icon announcements">
+                            <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+                        </span>
+                        <div class="landing-feature-text">
+                            <h3>Announcements</h3>
+                            <p>Stay updated with campus news</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square landing-feature-arrow" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="landing-feature">
+                        <span class="landing-feature-icon community">
+                            <i class="fa-solid fa-users" aria-hidden="true"></i>
+                        </span>
+                        <div class="landing-feature-text">
+                            <h3>Student Community</h3>
+                            <p>Connect and participate</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-up-right-from-square landing-feature-arrow" aria-hidden="true"></i>
+                    </div>
+
+                    <div class="landing-card-footer">
+                        <span class="landing-footer-check">
+                            <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        </span>
+                        <span>Made for your campus</span>
+                        <span class="landing-footer-status"><span></span> CONNECTED</span>
+                    </div>
+                </div>
+
+                <div class="landing-floating-note" aria-hidden="true">
+                    <span class="landing-floating-icon">
+                        <i class="fa-regular fa-lightbulb"></i>
+                    </span>
+                    <span>
+                        <strong>Stay in the loop</strong>
+                        <small>Campus life, all in one place</small>
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <footer class="landing-footer">
+            <span>&copy; @DateTime.Now.Year College Community</span>
+            <span>Connect with your campus.</span>
+        </footer>
+
+    </main>
+</body>
+</html>

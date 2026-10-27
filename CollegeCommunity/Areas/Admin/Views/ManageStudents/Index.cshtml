@@ -1,0 +1,128 @@
+﻿@model IEnumerable<CollegeCommunity.Models.Student>
+@{
+    ViewBag.Title = "Manage Users";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var admins = ViewBag.Admins as IEnumerable<CollegeCommunity.Models.Student>;
+}
+
+<!-- 1. ADMINISTRATORS SECTION -->
+<div class="card glass-panel" style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <h2 style="margin: 0;"><i class="fa-solid fa-shield-halved" style="color: var(--color-danger); margin-right: 10px;"></i> System Administrators</h2>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="border-bottom: 2px solid rgba(255,255,255,0.1); color: var(--color-text-secondary);">
+                    <th style="padding: 12px 10px;">Enrollment No.</th>
+                    <th style="padding: 12px 10px;">Admin Name</th>
+                    <th style="padding: 12px 10px;">College Email</th>
+                    <th style="padding: 12px 10px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (admins != null && admins.Any())
+                {
+                    foreach (var item in admins)
+                    {
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px 10px; font-weight: 500; color: var(--color-danger);">@item.EnrollmentNo</td>
+                            <td style="padding: 12px 10px;">
+                                @item.FirstName @item.LastName
+                                <span style="background: rgba(230, 90, 107, 0.2); color: var(--color-danger); padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-left: 8px; border: 1px solid rgba(230, 90, 107, 0.4);">ADMIN</span>
+                            </td>
+                            <td style="padding: 12px 10px; color: var(--color-text-secondary);">@item.CollegeEmail</td>
+
+                            <td style="padding: 12px 10px;">
+                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+
+                                    <!-- Demote to Student Button -->
+                                    @using (Html.BeginForm("Demote", "ManageStudents", new { id = item.Id }, FormMethod.Post, new { style = "margin: 0;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn" style="background: rgba(244, 180, 0, 0.15); color: var(--color-warning) !important; padding: 6px 12px; font-size: 0.85rem;" onclick="return confirm('Remove Admin privileges for @item.FirstName? They will become a standard student.');">
+                                            <i class="fa-solid fa-arrow-down" style="font-size: 0.75rem; margin-right: 4px;"></i> Remove Admin
+                                        </button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- VISUAL SEPARATOR -->
+<div style="display: flex; align-items: center; margin: 30px 0; opacity: 0.5;">
+    <div style="flex: 1; height: 1px; background: var(--color-text-secondary);"></div>
+    <div style="padding: 0 20px; color: var(--color-text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px;">Standard Students</div>
+    <div style="flex: 1; height: 1px; background: var(--color-text-secondary);"></div>
+</div>
+
+<!-- 2. STANDARD STUDENTS SECTION -->
+<div class="card glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <h2 style="margin: 0;"><i class="fa-solid fa-user-graduate" style="color: var(--color-primary-light); margin-right: 10px;"></i> Enrolled Students</h2>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="border-bottom: 2px solid rgba(255,255,255,0.1); color: var(--color-text-secondary);">
+                    <th style="padding: 12px 10px;">Enrollment No.</th>
+                    <th style="padding: 12px 10px;">GR No.</th>
+                    <th style="padding: 12px 10px;">Student Name</th>
+                    <th style="padding: 12px 10px;">College Email</th>
+                    <th style="padding: 12px 10px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px 10px; font-weight: 500; color: var(--color-accent);">@item.EnrollmentNo</td>
+                            <td style="padding: 12px 10px; color: var(--color-warning);">@item.GRNumber</td>
+                            <td style="padding: 12px 10px;">@item.FirstName @item.LastName</td>
+                            <td style="padding: 12px 10px; color: var(--color-text-secondary);">@item.CollegeEmail</td>
+
+                            <td style="padding: 12px 10px;">
+                                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+
+                                    <!-- Promote to Admin Button -->
+                                    @using (Html.BeginForm("Promote", "ManageStudents", new { id = item.Id }, FormMethod.Post, new { style = "margin: 0;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn" style="background: rgba(56, 198, 192, 0.15); color: var(--color-accent) !important; padding: 6px 12px; font-size: 0.85rem;" onclick="return confirm('Promote @item.FirstName to Administrator? They will gain full control of the Admin portal.');">
+                                            <i class="fa-solid fa-shield-halved" style="font-size: 0.75rem; margin-right: 4px;"></i> Make Admin
+                                        </button>
+                                    }
+
+                                    <!-- Remove Student Button -->
+                                    @using (Html.BeginForm("Delete", "ManageStudents", new { id = item.Id }, FormMethod.Post, new { style = "margin: 0;" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn" style="background: rgba(230, 90, 107, 0.15); color: var(--color-danger) !important; padding: 6px 12px; font-size: 0.85rem;" onclick="return confirm('Permanently delete student @item.EnrollmentNo?');">
+                                            <i class="fa-solid fa-user-minus" style="font-size: 0.75rem; margin-right: 4px;"></i> Remove
+                                        </button>
+                                    }
+
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 30px; color: var(--color-text-secondary);">No standard student accounts found in the database.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<CollegeCommunity.Models.ClubMembership>
+@{
+    ViewBag.Title = ViewBag.ClubName + " Roster";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <div>
+            <a href="@Url.Action("Index")" style="color: var(--color-text-secondary); text-decoration: none; font-size: 0.85rem; margin-bottom: 5px; display: inline-block;"><i class="fa-solid fa-arrow-left"></i> Back to Clubs</a>
+            <h2 style="margin: 0;">@ViewBag.ClubName - Member Roster</h2>
+        </div>
+    </div>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="border-bottom: 2px solid rgba(255,255,255,0.1); color: var(--color-text-secondary);">
+                    <th style="padding: 12px 10px;">Student Name</th>
+                    <th style="padding: 12px 10px;">Enrollment No.</th>
+                    <th style="padding: 12px 10px;">Joined Date</th>
+                    <th style="padding: 12px 10px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var mem in Model)
+                    {
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <td style="padding: 12px 10px;">@mem.Student.FirstName @mem.Student.LastName</td>
+                            <td style="padding: 12px 10px; color: var(--color-accent);">@mem.Student.EnrollmentNo</td>
+                            <td style="padding: 12px 10px; color: var(--color-text-secondary);">@mem.JoinedAt.ToString("MMM dd, yyyy")</td>
+
+                            <td style="padding: 12px 10px; text-align: right;">
+                                @using (Html.BeginForm("RemoveMember", "ManageClubs", new { membershipId = mem.Id, clubId = ViewBag.ClubId }, FormMethod.Post, new { style = "margin: 0;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn" style="background: rgba(230, 90, 107, 0.15); color: var(--color-danger) !important; padding: 6px 12px; font-size: 0.85rem;" onclick="return confirm('Remove this student from the club?');">
+                                        <i class="fa-solid fa-user-minus"></i> Kick
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 30px; color: var(--color-text-secondary);">No students are currently enrolled in this club.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

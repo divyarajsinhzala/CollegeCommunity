@@ -1,0 +1,61 @@
+﻿@model CollegeCommunity.Models.Student
+
+@{
+    ViewBag.Title = "My Profile";
+    Layout = "~/Areas/Student/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div style="display: flex; flex-direction: column; gap: var(--spacing-lg); max-width: 900px; margin: 0 auto;">
+
+    <!-- Profile Header Card -->
+    <div class="card glass-panel" style="display: flex; align-items: center; gap: 30px; padding: 40px;">
+        <div style="width: 120px; height: 120px; background: url('https://ui-avatars.com/api/?name=@Uri.EscapeDataString(Model.FirstName + " " + Model.LastName)&background=38c6c0&color=fff&size=120') center/cover; border-radius: 50%; box-shadow: 0 10px 20px rgba(0,0,0,0.3);"></div>
+        <div style="flex: 1;">
+            <h1 style="margin: 0 0 5px 0; font-size: 2.2rem;">@Model.FirstName @Model.LastName</h1>
+            <p style="margin: 0; color: var(--color-accent); font-size: 1.1rem; font-weight: 500;">@Model.Branch Engineering</p>
+            <p style="margin: 5px 0 0 0; color: var(--color-text-secondary);"><i class="fa-regular fa-envelope"></i> @Model.CollegeEmail</p>
+        </div>
+        <button class="btn btn-primary" style="align-self: flex-start;"><i class="fa-solid fa-pen-to-square"></i> Edit Profile</button>
+    </div>
+
+    <!-- Academic Information -->
+    <div class="card glass-panel">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;"><i class="fa-solid fa-graduation-cap" style="color: var(--color-text-secondary); margin-right: 10px;"></i> Academic Details</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div>
+                <small style="color: var(--color-text-secondary); display: block; margin-bottom: 5px;">Enrollment Number</small>
+                <div style="font-size: 1.1rem; font-weight: 500;">@Model.EnrollmentNo</div>
+            </div>
+            <div>
+                <small style="color: var(--color-text-secondary); display: block; margin-bottom: 5px;">GR Number</small>
+                <div style="font-size: 1.1rem; font-weight: 500;">@Model.GRNumber</div>
+            </div>
+            <div>
+                <small style="color: var(--color-text-secondary); display: block; margin-bottom: 5px;">Department</small>
+                <div style="font-size: 1.1rem; font-weight: 500;">@Model.Department</div>
+            </div>
+            <div>
+                <small style="color: var(--color-text-secondary); display: block; margin-bottom: 5px;">Current Year</small>
+                <div style="font-size: 1.1rem; font-weight: 500;">Year @Model.Year (Sem @Model.Semester)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Personal Information -->
+    <div class="card glass-panel">
+        <h3 style="margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;"><i class="fa-regular fa-address-card" style="color: var(--color-text-secondary); margin-right: 10px;"></i> Personal Details</h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div>
+                <small style="color: var(--color-text-secondary); display: block; margin-bottom: 5px;">Mobile Number</small>
+                <div style="font-size: 1.1rem; font-weight: 500;">+91 @Model.MobileNo</div>
+            </div>
+            <div>
+                <small style="color: var(--color-text-secondary); display: block; margin-bottom: 5px;">Date of Birth</small>
+                <div style="font-size: 1.1rem; font-weight: 500;">@Model.DateOfBirth.ToString("MMMM dd, yyyy")</div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<CollegeCommunity.Models.Event>
+@{
+    ViewBag.Title = "Events Directory";
+    Layout = "~/Areas/Student/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg); flex-wrap: wrap; gap: 15px;">
+    <div>
+        <h2 style="margin: 0;">Campus Events</h2>
+        <p style="margin: 5px 0 0 0; color: var(--color-text-secondary);">Discover and register for upcoming activities.</p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <button class="btn glass-panel" style="padding: 10px 20px;"><i class="fa-solid fa-filter"></i> Filter</button>
+        <button class="btn btn-primary"><i class="fa-solid fa-calendar-plus"></i> Request Event</button>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--spacing-xl);">
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+            <!-- Dynamic Event Card -->
+            <div class="card glass-panel" style="display: flex; flex-direction: column; padding: 0; overflow: hidden;">
+                <div style="height: 160px; background: url('@(string.IsNullOrEmpty(item.ImageUrl) ? "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600" : item.ImageUrl)') center/cover; position: relative;">
+                    <div style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; border: 1px solid rgba(255,255,255,0.2);">Campus</div>
+                </div>
+                <div style="padding: var(--spacing-lg); display: flex; flex-direction: column; flex: 1;">
+                    <h3 style="margin: 0 0 10px 0;">@item.Title</h3>
+                    <div style="display: flex; flex-direction: column; gap: 8px; color: var(--color-text-secondary); font-size: 0.9rem; margin-bottom: 20px;">
+                        <span><i class="fa-regular fa-calendar" style="width: 20px;"></i> @item.EventDate.ToString("MMM dd, yyyy • hh:mm tt")</span>
+                        <span><i class="fa-solid fa-location-dot" style="width: 20px;"></i> @(string.IsNullOrEmpty(item.Location) ? "TBA" : item.Location)</span>
+                    </div>
+                    <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center;">
+                            <span style="font-size: 0.85rem; color: var(--color-text-secondary);">Open for Registration</span>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 8px 16px; font-size: 0.9rem;">Register</button>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--color-text-secondary);">
+            <i class="fa-regular fa-calendar-xmark" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+            <h3>No Upcoming Events</h3>
+            <p>Check back later for new college activities.</p>
+        </div>
+    }
+</div>

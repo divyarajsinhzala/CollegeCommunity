@@ -1,0 +1,114 @@
+﻿
+@model IEnumerable<CollegeCommunity.Models.Event>
+
+@{
+    ViewBag.Title = "Manage Events";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card glass-panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:15px;">
+        <h2 style="margin:0;">
+            <i class="fa-regular fa-calendar-check"
+               style="color:var(--color-accent);margin-right:10px;"></i>
+            Event Directory
+        </h2>
+
+        <a href="@Url.Action("Create", "ManageEvents", new { area = "Admin" })"
+           class="btn btn-primary"
+           style="color:var(--color-background)!important;text-decoration:none!important;font-weight:600;">
+            <i class="fa-solid fa-plus"></i> Add New Event
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div role="status"
+             style="padding:12px 15px;margin-bottom:15px;border-radius:8px;background:rgba(56,198,192,.12);color:var(--color-accent);">
+            <i class="fa-solid fa-circle-check"></i>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div role="alert"
+             style="padding:12px 15px;margin-bottom:15px;border-radius:8px;background:rgba(230,90,107,.12);color:var(--color-danger);">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;text-align:left;">
+            <thead>
+                <tr style="border-bottom:2px solid rgba(255,255,255,0.1);color:var(--color-text-secondary);">
+                    <th style="padding:12px 10px;">Event Title</th>
+                    <th style="padding:12px 10px;">Date &amp; Time</th>
+                    <th style="padding:12px 10px;">Location</th>
+                    <th style="padding:12px 10px;text-align:right;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <td style="padding:12px 10px;font-weight:500;">
+                                @item.Title
+                            </td>
+
+                            <td style="padding:12px 10px;color:var(--color-text-secondary);">
+                                @item.EventDate.ToString("MMM dd, yyyy • hh:mm tt")
+                            </td>
+
+                            <td style="padding:12px 10px;color:var(--color-text-secondary);">
+                                @(string.IsNullOrWhiteSpace(item.Location) ? "TBA" : item.Location)
+                            </td>
+
+                            <td style="padding:12px 10px;text-align:right;white-space:nowrap;">
+                                <a href="@Url.Action("Edit", "ManageEvents", new { area = "Admin", id = item.Id })"
+                                   class="btn"
+                                   style="display:inline-block;background:rgba(255,255,255,0.1);color:#fff!important;text-decoration:none!important;padding:6px 12px;font-size:.85rem;margin-right:5px;">
+                                    <i class="fa-solid fa-pen"
+                                       style="font-size:.75rem;margin-right:4px;"></i>
+                                    Edit
+                                </a>
+
+                                @using (Html.BeginForm(
+                                    "Delete",
+                                    "ManageEvents",
+                                    new { area = "Admin", id = item.Id },
+                                    FormMethod.Post,
+                                    new { style = "display:inline;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn"
+                                            style="background:rgba(230,90,107,.15);color:var(--color-danger)!important;border:1px solid rgba(230,90,107,.2);padding:6px 12px;font-size:.85rem;cursor:pointer;"
+                                            onclick="return confirm('Are you sure you want to delete this event? This action cannot be undone.');">
+                                        <i class="fa-solid fa-trash"
+                                           style="font-size:.75rem;margin-right:4px;"></i>
+                                        Delete
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4"
+                            style="text-align:center;padding:30px;color:var(--color-text-secondary);">
+                            No events found. Click 'Add New Event' to create one.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

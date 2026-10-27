@@ -1,0 +1,213 @@
+﻿@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var adminName = Session["AdminName"] != null ? Session["AdminName"].ToString() : "Administrator";
+    var avatarName = Uri.EscapeDataString(adminName);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Admin Control Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="~/Content/css/variable.css?v=2" rel="stylesheet" />
+    <link href="~/Content/css/layout.css?v=8" rel="stylesheet" />
+    <link href="~/Content/css/components.css?v=2" rel="stylesheet" />
+    <style>
+        /* Admin-specific active state (Subtle Crimson Glass) */
+        .sidebar-nav .nav-link.active {
+            background: rgba(230, 90, 107, 0.15) !important;
+            border-left: 3px solid var(--color-danger) !important;
+            color: white !important;
+        }
+
+            .sidebar-nav .nav-link.active i {
+                color: var(--color-danger) !important;
+            }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar glass-panel" id="mainSidebar" style="display: flex; flex-direction: column;">
+
+            <!-- Sidebar Header -->
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-shield-halved" id="sidebarToggle" title="Toggle Sidebar" style="cursor:pointer; color: var(--color-danger);"></i>
+                <div class="sidebar-text">
+                    <h3 style="margin:0; font-size:1.1rem; color:white;">Admin Portal</h3>
+                    <small style="color:var(--color-danger); font-weight: 600; font-size:0.75rem; letter-spacing: 1px;">CONTROL CENTER</small>
+                </div>
+            </div>
+
+            <!-- MAIN LINKS (flex: 1 pushes the bottom content down) -->
+            <div class="sidebar-scroll-area" style="flex: 1; overflow-y: auto;">
+                <nav class="sidebar-nav">
+                    <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })" class="nav-link @(string.Equals(currentController, "Dashboard", StringComparison.OrdinalIgnoreCase) && !string.Equals(currentAction, "Settings", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-solid fa-chart-pie"></i> <span class="sidebar-text">Dashboard</span>
+                    </a>
+                    <a href="@Url.Action("Index", "ManageEvents", new { area = "Admin" })" class="nav-link @(string.Equals(currentController, "ManageEvents", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-regular fa-calendar-plus"></i> <span class="sidebar-text">Manage Events</span>
+                    </a>
+                    <a href="@Url.Action("Index", "ManageAnnouncements", new { area = "Admin" })" class="nav-link @(string.Equals(currentController, "ManageAnnouncements", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-solid fa-bullhorn"></i> <span class="sidebar-text">Announcements</span>
+                    </a>
+                    <a href="@Url.Action("Index", "ManageClubs", new { area = "Admin" })" class="nav-link @(string.Equals(currentController, "ManageClubs", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-solid fa-users"></i> <span class="sidebar-text">Manage Clubs</span>
+                    </a>
+                    <a href="@Url.Action("Index", "ManageChat", new { area = "Admin" })" class="nav-link @(string.Equals(currentController, "ManageChat", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-regular fa-comments"></i> <span class="sidebar-text">Chat Moderation</span>
+                    </a>
+                    <a href="@Url.Action("Index", "ManageStudents", new { area = "Admin" })" class="nav-link @(string.Equals(currentController, "ManageStudents", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-solid fa-user-graduate"></i> <span class="sidebar-text">Manage Users</span>
+                    </a>
+                    <a href="@Url.Action("Index", "ManageFeedback", new { area = "Admin" })" class="nav-link @(string.Equals(currentController, "ManageFeedback", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-solid fa-inbox"></i> <span class="sidebar-text">Support Tickets</span>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- BOTTOM LINKS (Separator & Settings) -->
+            <div style="padding: 0 15px 15px 15px;">
+                <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0 15px 0;"></div>
+                <nav class="sidebar-nav" style="padding: 0;">
+                    <a href="@Url.Action("Settings", "Dashboard", new { area = "Admin" })" class="nav-link @(string.Equals(currentAction, "Settings", StringComparison.OrdinalIgnoreCase) ? "active" : "")">
+                        <i class="fa-solid fa-gear"></i> <span class="sidebar-text">Settings</span>
+                    </a>
+                </nav>
+            </div>
+
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="top-navbar glass-panel">
+
+                <!-- Admin Search -->
+                <div class="search-wrapper" id="adminSearchContainer">
+                    <i class="fa-solid fa-magnifying-glass" style="color: var(--color-text-secondary); font-size: 0.95rem; flex-shrink: 0;"></i>
+                    <input type="text" id="adminSearchInput" placeholder="Search admin panels..." autocomplete="off" />
+                    <i class="fa-solid fa-xmark clear-search-icon" id="adminClearSearchBtn" title="Clear search" style="flex-shrink: 0;"></i>
+                    <div class="search-results-overlay" id="adminSearchResultsOverlay"></div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <!-- Admin Profile Dropdown -->
+                    <div style="position: relative;" id="profileDropdownContainer">
+                        <div style="display: flex; align-items: center; gap: 12px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 20px; cursor: pointer;" id="profileToggleBtn">
+                            <div style="width: 35px; height: 35px; background: url('https://ui-avatars.com/api/?name=@avatarName&background=e65a6b&color=fff') center/cover; border-radius: 50%; box-shadow: 2px 2px 8px rgba(0,0,0,0.5);"></div>
+                            <div style="line-height: 1.2;">
+                                <div style="font-weight: 600; font-size: 0.9rem;">@adminName</div>
+                                <div style="font-size: 0.75rem; color: var(--color-danger);">System Admin</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: 5px; color: var(--color-text-secondary);"></i>
+                        </div>
+
+                        <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                            <!-- Linked to the new Admin Profile -->
+                            <a href="@Url.Action("Index", "Profile", new { area = "Admin" })"><i class="fa-regular fa-user"></i> My Profile</a>
+                            <a href="@Url.Action("Settings", "Dashboard", new { area = "Admin" })"><i class="fa-solid fa-gear"></i> Settings</a>
+                            <div class="dropdown-divider"></div>
+                            <a href="@Url.Action("Logout", "Account", new { area = "" })" style="color: var(--color-danger);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="render-body">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <!-- Layout Scripts -->
+    <script>
+        (function () {
+            document.addEventListener("DOMContentLoaded", function () {
+                // Sidebar Toggle
+                document.getElementById('sidebarToggle').addEventListener('click', function () {
+                    document.getElementById('mainSidebar').classList.toggle('collapsed');
+                });
+
+                // Profile Dropdown Toggle
+                var adminProfileBtn = document.getElementById('profileToggleBtn');
+                var adminProfileMenu = document.getElementById('profileDropdownMenu');
+                if(adminProfileBtn && adminProfileMenu) {
+                    adminProfileBtn.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        adminProfileMenu.classList.toggle('show');
+                    });
+                }
+
+                // Global Search Data
+                var adminSiteData = [
+                    { title: "System Dashboard", type: "Overview", icon: "fa-solid fa-chart-pie", url: "@Url.Action("Index", "Dashboard", new { area = "Admin" })" },
+                    { title: "Manage Events", type: "Moderation", icon: "fa-regular fa-calendar-plus", url: "@Url.Action("Index", "ManageEvents", new { area = "Admin" })" },
+                    { title: "Manage Announcements", type: "Moderation", icon: "fa-solid fa-bullhorn", url: "@Url.Action("Index", "ManageAnnouncements", new { area = "Admin" })" },
+                    { title: "Manage Clubs", type: "Directory", icon: "fa-solid fa-users", url: "@Url.Action("Index", "ManageClubs", new { area = "Admin" })" },
+                    { title: "Chat Moderation", type: "Moderation", icon: "fa-regular fa-comments", url: "@Url.Action("Index", "ManageChat", new { area = "Admin" })" },
+                    { title: "Manage Users", type: "Users", icon: "fa-solid fa-user-graduate", url: "@Url.Action("Index", "ManageStudents", new { area = "Admin" })" },
+                    { title: "Support Tickets", type: "Moderation", icon: "fa-solid fa-inbox", url: "@Url.Action("Index", "ManageFeedback", new { area = "Admin" })" },
+                    { title: "Admin Profile", type: "Account", icon: "fa-regular fa-user", url: "@Url.Action("Index", "Profile", new { area = "Admin" })" },
+                    { title: "System Settings", type: "Configuration", icon: "fa-solid fa-gear", url: "@Url.Action("Settings", "Dashboard", new { area = "Admin" })" }
+                ];
+
+                // Search Box Logic
+                var searchInput = document.getElementById('adminSearchInput');
+                var searchOverlay = document.getElementById('adminSearchResultsOverlay');
+                var clearBtn = document.getElementById('adminClearSearchBtn');
+
+                if (searchInput && searchOverlay && clearBtn) {
+                    searchInput.addEventListener('input', function () {
+                        var query = this.value.toLowerCase().trim();
+                        searchOverlay.innerHTML = '';
+
+                        if (query.length > 0) {
+                            clearBtn.classList.add('visible');
+                            var matched = adminSiteData.filter(function (item) {
+                                return item.title.toLowerCase().indexOf(query) > -1 || item.type.toLowerCase().indexOf(query) > -1;
+                            });
+
+                            if (matched.length > 0) {
+                                matched.forEach(function(item) {
+                                    var link = document.createElement('a');
+                                    link.href = item.url;
+                                    link.className = 'search-item';
+                                    link.innerHTML = '<i class="' + item.icon + '"></i><div style="flex:1;"><div style="font-weight: 500;">' + item.title + '</div><div style="font-size: 0.7rem; color: var(--color-text-secondary);">' + item.type + '</div></div>';
+                                    searchOverlay.appendChild(link);
+                                });
+                            } else {
+                                searchOverlay.innerHTML = '<div style="padding: 15px; color: var(--color-text-secondary); text-align: center;">No admin panels found</div>';
+                            }
+                            searchOverlay.classList.add('show');
+                        } else {
+                            clearBtn.classList.remove('visible');
+                            searchOverlay.classList.remove('show');
+                        }
+                    });
+
+                    clearBtn.addEventListener('click', function () {
+                        searchInput.value = '';
+                        this.classList.remove('visible');
+                        searchOverlay.classList.remove('show');
+                        searchInput.focus();
+                    });
+                }
+
+                // Global Click Dismiss
+                document.addEventListener('click', function (e) {
+                    if (adminProfileBtn && !adminProfileBtn.contains(e.target) && !adminProfileMenu.contains(e.target)) {
+                        adminProfileMenu.classList.remove('show');
+                    }
+                    var searchWrap = document.getElementById('adminSearchContainer');
+                    if (searchWrap && !searchWrap.contains(e.target) && searchOverlay) {
+                        searchOverlay.classList.remove('show');
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

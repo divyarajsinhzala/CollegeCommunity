@@ -1,0 +1,158 @@
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var currentAdmins = ViewBag.CurrentAdmins as IEnumerable<CollegeCommunity.Models.Student>;
+    var clubStats = ViewBag.ClubStats as Dictionary<string, int>;
+}
+
+<!-- Hero Stats -->
+<div class="card dashboard-hero glass-panel">
+    <div>
+        <h4 style="margin: 0; font-weight: 400; color: var(--color-text-secondary);">System Overview</h4>
+        <h1 style="margin: 5px 0 10px 0; font-size: 2.5rem;">Control Center</h1>
+    </div>
+    <div class="hero-stats">
+        <div class="stat-box" style="background: rgba(71, 118, 230, 0.1) !important;">
+            <i class="fa-solid fa-user-graduate" style="color: #4776e6; font-size: 1.5rem; margin-bottom: 5px;"></i>
+            <h3 style="margin:0;">@ViewBag.TotalStudents</h3>
+            <small style="color: var(--color-text-secondary);">Registered Students</small>
+        </div>
+        <div class="stat-box" style="background: rgba(244, 180, 0, 0.1) !important;">
+            <i class="fa-regular fa-calendar-check" style="color: #f4b400; font-size: 1.5rem; margin-bottom: 5px;"></i>
+            <h3 style="margin:0;">@ViewBag.TotalEvents</h3>
+            <small style="color: var(--color-text-secondary);">Active Events</small>
+        </div>
+        <div class="stat-box" style="background: rgba(56, 198, 192, 0.1) !important;">
+            <i class="fa-solid fa-cubes" style="color: var(--color-accent); font-size: 1.5rem; margin-bottom: 5px;"></i>
+            <h3 style="margin:0;">@ViewBag.TotalClubs</h3>
+            <small style="color: var(--color-text-secondary);">Active Clubs</small>
+        </div>
+        <div class="stat-box" style="background: rgba(230, 90, 107, 0.1) !important;">
+            <i class="fa-solid fa-bullhorn" style="color: var(--color-danger); font-size: 1.5rem; margin-bottom: 5px;"></i>
+            <h3 style="margin:0;">@ViewBag.TotalAnnouncements</h3>
+            <small style="color: var(--color-text-secondary);">Announcements</small>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-layout" style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--spacing-lg);">
+
+    <!-- Feed Column (Left) -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="card glass-panel">
+            <h3 style="margin-top: 0; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                Upcoming Events
+                <a href="@Url.Action("Index", "ManageEvents")" class="view-all-link">Manage All <i class="fa-solid fa-arrow-right"></i></a>
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                @foreach (var ev in (IEnumerable<CollegeCommunity.Models.Event>)ViewBag.RecentEvents)
+                {
+                    <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid var(--color-success); padding: 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4 style="margin: 0 0 5px 0;">@ev.Title</h4>
+                            <div style="font-size: 0.85rem; color: var(--color-text-secondary);">
+                                <i class="fa-regular fa-calendar"></i> @ev.EventDate.ToString("MMM dd, yyyy - hh:mm tt")
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Edit", "ManageEvents", new { id = ev.Id })" class="btn" style="background: rgba(255,255,255,0.1); color: #fff !important; text-decoration: none !important; padding: 6px 12px; font-size: 0.85rem;">Edit</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card glass-panel">
+            <h3 style="margin-top: 0; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                Recent Announcements
+                <a href="@Url.Action("Index", "ManageAnnouncements")" class="view-all-link">Manage All <i class="fa-solid fa-arrow-right"></i></a>
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                @foreach (var ann in (IEnumerable<CollegeCommunity.Models.Announcement>)ViewBag.RecentAnnouncements)
+                {
+                    var borderColor = ann.Type == "red" || ann.Type == "urgent" ? "var(--color-danger)" :
+                                      ann.Type == "green" ? "var(--color-success)" :
+                                      ann.Type == "yellow" ? "var(--color-warning)" : "var(--color-primary-light)";
+                    <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid @borderColor; padding: 15px; border-radius: 6px;">
+                        <h4 style="margin: 0 0 5px 0;">@ann.Title</h4>
+                        <div style="font-size: 0.85rem; color: var(--color-text-secondary); margin-bottom: 8px;">
+                            <i class="fa-regular fa-clock"></i> Posted on @ann.DatePosted.ToString("MMM dd, yyyy")
+                        </div>
+                        <p style="margin: 0; font-size: 0.9rem; color: #ddd; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">@ann.Description</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics & Actions Column (Right) -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Quick Actions -->
+        <div class="card glass-panel">
+            <h3 style="margin-top: 0; margin-bottom: 15px;">Quick Actions</h3>
+            <div class="quick-actions-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <button class="btn btn-action" style="background: linear-gradient(135deg, #4776e6, #8e54e9); color: white; border: none; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer;" onclick="location.href='@Url.Action("Create", "ManageEvents")'">
+                    <i class="fa-regular fa-calendar-plus" style="font-size: 1.5rem;"></i> New Event
+                </button>
+                <button class="btn btn-action" style="background: linear-gradient(135deg, #f46b45, #eea849); color: white; border: none; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer;" onclick="location.href='@Url.Action("Create", "ManageAnnouncements")'">
+                    <i class="fa-solid fa-bullhorn" style="font-size: 1.5rem;"></i> Broadcast
+                </button>
+                <button class="btn btn-action" style="background: linear-gradient(135deg, #00b09b, #96c93d); color: white; border: none; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer;" onclick="location.href='@Url.Action("Index", "ManageChat")'">
+                    <i class="fa-solid fa-shield-halved" style="font-size: 1.5rem;"></i> Moderate
+                </button>
+                <button class="btn btn-action" style="background: linear-gradient(135deg, #ee0979, #ff6a00); color: white; border: none; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; border-radius: 8px; cursor: pointer;" onclick="location.href='@Url.Action("Create", "ManageClubs")'">
+                    <i class="fa-solid fa-users" style="font-size: 1.5rem;"></i> Add Club
+                </button>
+            </div>
+        </div>
+
+        <!-- NEW WIDGET: Club Enrollments -->
+        <div class="card glass-panel">
+            <h3 style="margin-top: 0; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                Club Enrollments
+                <a href="@Url.Action("Index", "ManageClubs")" class="view-all-link" style="font-size: 0.8rem;">Manage Clubs</a>
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                @if (clubStats != null && clubStats.Any())
+                {
+                    foreach (var stat in clubStats.OrderByDescending(c => c.Value))
+                    {
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;">
+                            <span style="font-weight: 500; color: white;">@stat.Key</span>
+                            <span style="background: rgba(56, 198, 192, 0.2); color: var(--color-accent); padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;">
+                                <i class="fa-solid fa-users" style="margin-right: 4px;"></i> @stat.Value Members
+                            </span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align: center; color: var(--color-text-secondary); padding: 15px;">No clubs created yet.</div>
+                }
+            </div>
+        </div>
+
+        <!-- System Admins -->
+        <div class="card glass-panel">
+            <h3 style="margin-top: 0; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                System Admins
+                <a href="@Url.Action("Index", "ManageStudents")" class="view-all-link" style="font-size: 0.8rem;">Manage Users</a>
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                @if (currentAdmins != null && currentAdmins.Any())
+                {
+                    foreach (var admin in currentAdmins)
+                    {
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;">
+                            <div style="width: 35px; height: 35px; border-radius: 50%; background: url('https://ui-avatars.com/api/?name=@Uri.EscapeDataString(admin.FirstName)&background=e65a6b&color=fff') center/cover; box-shadow: 0 2px 5px rgba(0,0,0,0.5);"></div>
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-weight: 600; font-size: 0.95rem; color: white;">@admin.FirstName @admin.LastName</div>
+                                <div style="font-size: 0.75rem; color: var(--color-danger);">System Admin</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

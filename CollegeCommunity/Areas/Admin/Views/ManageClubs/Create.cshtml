@@ -1,0 +1,41 @@
+﻿@model CollegeCommunity.Models.Club
+@{
+    ViewBag.Title = "Create Club";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card glass-panel" style="max-width: 700px; margin: 0 auto;">
+    <div style="margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <h2 style="margin: 0;"><i class="fa-solid fa-users" style="color: var(--color-accent); margin-right: 10px;"></i> Add New Club</h2>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            @Html.ValidationSummary(true, "", new { @style = "color: var(--color-danger);" })
+
+            <div>
+                <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Club Name</label>
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "e.g., Coding Club" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @style = "color: var(--color-danger); font-size: 0.85rem; margin-top: 5px; display: block;" })
+            </div>
+
+            <div>
+                <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Cover Image URL (Optional)</label>
+                @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control", placeholder = "https://..." } })
+            </div>
+
+            <div>
+                <label style="color: var(--color-text-secondary); display: block; margin-bottom: 8px;">Description</label>
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control", @style = "min-height: 120px; resize: vertical;", placeholder = "What is this club about?" })
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 10px;">
+                <button type="submit" class="btn btn-primary" style="padding: 10px 25px; color: #000 !important;"><i class="fa-solid fa-check"></i> Save Club</button>
+                <a href="@Url.Action("Index")" class="btn" style="background: rgba(255,255,255,0.1); color: #fff !important; text-decoration: none !important; padding: 10px 25px;">Cancel</a>
+            </div>
+        </div>
+    }
+</div>

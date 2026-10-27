@@ -1,0 +1,29 @@
+﻿@model CollegeCommunity.Models.Announcement
+@{
+    ViewBag.Title = "Create Announcement";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card glass-panel" style="max-width: 600px; margin: 0 auto;">
+    <h2 style="margin: 0 0 20px 0;"><i class="fa-solid fa-bullhorn" style="color: var(--color-accent); margin-right: 10px;"></i> Post Announcement</h2>
+
+    @using (Html.BeginForm("Create", "ManageAnnouncements", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; margin-bottom: 5px; color: var(--color-text-secondary);">Title</label>
+            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", required = "required", placeholder = "e.g., Campus Closed Tomorrow" })
+        </div>
+
+        <div style="margin-bottom: 25px;">
+            <label style="display: block; margin-bottom: 5px; color: var(--color-text-secondary);">Description</label>
+            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", required = "required", rows = "4", placeholder = "Details of the announcement..." })
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <a href="@Url.Action("Index")" class="btn glass-panel">Cancel</a>
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Publish</button>
+        </div>
+    }
+</div>

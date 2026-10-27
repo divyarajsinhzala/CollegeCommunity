@@ -1,0 +1,97 @@
+﻿@{
+    ViewBag.Title = "Notifications";
+    Layout = "~/Areas/Student/Views/Shared/_StudentLayout.cshtml";
+    var urgentAlerts = ViewBag.UrgentAlerts as IEnumerable<CollegeCommunity.Models.Announcement>;
+    var mentions = ViewBag.Mentions as IEnumerable<CollegeCommunity.Models.ChatMessage>;
+
+    DateTime lastRead = ViewBag.LastReadTime != null ? (DateTime)ViewBag.LastReadTime : DateTime.MinValue;
+}
+
+<div class="card glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Notifications</h2>
+        <button id="markReadBtn" class="btn glass-panel" style="padding: 8px 16px; font-size: 0.85rem;"><i class="fa-solid fa-check-double"></i> Mark all as read</button>
+    </div>
+
+    <div class="list-group">
+        <!-- URGENT ADMIN ALERTS -->
+        @if (urgentAlerts != null && urgentAlerts.Any())
+        {
+            <h4 style="color: var(--color-danger); margin-top: 10px;"><i class="fa-solid fa-triangle-exclamation"></i> Action Required</h4>
+            foreach (var alert in urgentAlerts)
+            {
+                bool isNew = alert.DatePosted > lastRead;
+                <div class="list-item" style="padding: 20px; border-left: 3px solid var(--color-danger); margin-bottom: 10px; @(isNew ? "" : "opacity: 0.7;")">
+                    @if (isNew)
+                    {<span class="status-dot dot-red" style="margin-top: 6px;"></span>}
+                    <div style="flex: 1; min-width: 0; padding-left: @(isNew ? "0" : "15px");">
+                        <div style="display: flex; justify-content: space-between;">
+                            <h4 style="margin:0 0 5px 0; font-size: 1.1rem;">@alert.Title</h4>
+                            @if (isNew)
+                            {<span style="background: var(--color-danger); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;">NEW</span>}
+                        </div>
+                        <p style="margin:0 0 10px 0; color: var(--color-text-secondary); line-height: 1.5;">@alert.Description</p>
+                        <div class="item-meta"><i class="fa-regular fa-clock"></i> @alert.DatePosted.ToString("MMM dd") • Admin</div>
+                    </div>
+                </div>
+            }
+        }
+
+        <!-- CHAT MENTIONS -->
+        @if (mentions != null && mentions.Any())
+        {
+            <h4 style="color: var(--color-accent); margin-top: 20px;"><i class="fa-solid fa-at"></i> Recent Mentions</h4>
+            foreach (var msg in mentions)
+            {
+                bool isNew = msg.Timestamp > lastRead;
+                <div class="list-item" style="padding: 20px; border-left: 3px solid var(--color-accent); margin-bottom: 10px; @(isNew ? "" : "opacity: 0.7;")">
+                    @if (isNew)
+                    {<span class="status-dot dot-blue" style="margin-top: 6px;"></span>}
+                    <div style="flex: 1; min-width: 0; padding-left: @(isNew ? "0" : "15px");">
+                        <div style="display: flex; justify-content: space-between;">
+                            <h4 style="margin:0 0 5px 0; font-size: 1.0rem;">New mention from @msg.SenderName</h4>
+                            @if (isNew)
+                            {<span style="background: var(--color-accent); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: bold;">NEW</span>}
+                        </div>
+                        <p style="margin:0 0 10px 0; color: var(--color-text-secondary); line-height: 1.5; font-style: italic;">"@msg.MessageText"</p>
+                        <div class="item-meta">
+                            <i class="fa-regular fa-clock"></i> @msg.Timestamp.ToString("MMM dd, hh:mm tt")
+                            <a href="@Url.Action("Index", "Chat", new { clubId = msg.ClubId })" style="margin-left: 15px; color: var(--color-accent); text-decoration: none;"><i class="fa-solid fa-arrow-right"></i> Go to Chat</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+        @if ((urgentAlerts == null || !urgentAlerts.Any()) && (mentions == null || !mentions.Any()))
+        {
+            <div style="text-align: center; padding: 40px; color: var(--color-text-secondary);">
+                <i class="fa-regular fa-bell-slash" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>You're all caught up! No new notifications.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    document.getElementById('markReadBtn').addEventListener('click', function() {
+        // Hide the dot in the layout immediately
+        var dot = document.getElementById('navNotificationDot');
+        if(dot) dot.style.display = 'none';
+
+        // Tell the server to drop the permanent cookie
+        fetch('@Url.Action("MarkAllAsRead", "Notifications", new { area = "Student" })', {
+            method: 'POST'
+        }).then(response => {
+            if(response.ok) {
+                // Change UI to confirm success
+                this.innerHTML = '<i class="fa-solid fa-check"></i> Read';
+                this.style.opacity = '0.5';
+                this.disabled = true;
+
+                // Optionally reload the page to gray out the read items
+                setTimeout(() => window.location.reload(), 500);
+            }
+        });
+    });
+</script>

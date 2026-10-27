@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Academic FAQs";
+    Layout = "~/Areas/Student/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div class="card glass-panel" style="max-width: 800px; margin: 0 auto; padding: 40px;">
+    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px;">
+        <a href="@Url.Action("Index")" class="btn" style="background: rgba(255,255,255,0.1); padding: 8px 15px;"><i class="fa-solid fa-arrow-left"></i></a>
+        <h2 style="margin: 0;">Frequently Asked Questions</h2>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border-left: 3px solid #4776e6;">
+            <h4 style="margin: 0 0 10px 0; color: white;">How do I reset my portal password?</h4>
+            <p style="margin: 0; color: var(--color-text-secondary); font-size: 0.95rem; line-height: 1.5;">Currently, password resets must be handled directly through the IT department. Please visit the admin desk or submit a support ticket via the Help Center.</p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border-left: 3px solid var(--color-accent);">
+            <h4 style="margin: 0 0 10px 0; color: white;">Can I create my own club?</h4>
+            <p style="margin: 0; color: var(--color-text-secondary); font-size: 0.95rem; line-height: 1.5;">Students cannot create clubs directly through the portal. To form a new club, you must submit a formal proposal to the Student Affairs office. Once approved, an Admin will create the digital space for you.</p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border-left: 3px solid #f4b400;">
+            <h4 style="margin: 0 0 10px 0; color: white;">Why can't I type in the chatrooms?</h4>
+            <p style="margin: 0; color: var(--color-text-secondary); font-size: 0.95rem; line-height: 1.5;">If the chat input box is missing, the administration has likely enabled the Global Chat Lock (Read-Only Mode) for maintenance, holidays, or exam periods.</p>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; border-left: 3px solid #e65a6b;">
+            <h4 style="margin: 0 0 10px 0; color: white;">How do I update my profile details?</h4>
+            <p style="margin: 0; color: var(--color-text-secondary); font-size: 0.95rem; line-height: 1.5;">Your core academic details (Enrollment No, Branch) are locked. If there is a mistake in your record, submit a ticket to the admin to have it manually corrected in the database.</p>
+        </div>
+
+    </div>
+</div>

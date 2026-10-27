@@ -1,0 +1,112 @@
+﻿@model IEnumerable<CollegeCommunity.Models.ChatMessage>
+@{
+    ViewBag.Title = "Chat Moderation";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var activeClubId = ViewBag.ActiveClubId as int?;
+    var clubs = ViewBag.Clubs as IEnumerable<CollegeCommunity.Models.Club>;
+}
+
+<div style="display: flex; gap: 20px; height: 80vh; max-height: 800px;">
+
+    <!-- Sidebar -->
+    <div class="card glass-panel" style="width: 320px; padding: 0; display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0;">
+        <div style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);">
+            <h3 style="margin: 0;"><i class="fa-solid fa-users" style="color: var(--color-accent); margin-right: 10px;"></i> Select Club</h3>
+        </div>
+        <div style="flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
+            @if (clubs != null && clubs.Any())
+            {
+                foreach (var club in clubs)
+                {
+                    var isActive = activeClubId == club.Id;
+                    var bgImage = string.IsNullOrEmpty(club.ImageUrl) ? "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80" : club.ImageUrl;
+
+                    <a href="@Url.Action("Index", new { clubId = club.Id })" style="display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-sm); text-decoration: none; background: @(isActive ? "rgba(56, 198, 192, 0.15)" : "rgba(255,255,255,0.05)"); border: 1px solid @(isActive ? "var(--color-accent)" : "transparent"); transition: all 0.2s ease;">
+                        <div style="width: 35px; height: 35px; border-radius: 50%; background: url('@bgImage') center/cover;"></div>
+                        <div style="flex: 1; color: @(isActive ? "white" : "var(--color-text-secondary)"); font-weight: @(isActive ? "600" : "400"); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            @club.Name
+                        </div>
+                    </a>
+                }
+            }
+            else
+            {
+                <div style="padding: 20px; text-align: center; color: var(--color-text-secondary);">No clubs found.</div>
+            }
+        </div>
+    </div>
+
+    <!-- Active Chat Window -->
+    <div class="card glass-panel" style="flex: 1; padding: 0; display: flex; flex-direction: column; overflow: hidden;">
+        @if (activeClubId != null)
+        {
+            var activeClub = clubs.FirstOrDefault(c => c.Id == activeClubId);
+
+            <div style="padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);">
+                <h2 style="margin: 0;"><i class="fa-solid fa-shield-halved" style="color: var(--color-accent); margin-right: 10px;"></i> @activeClub.Name - Moderation</h2>
+                <p style="margin: 5px 0 0 0; color: var(--color-text-secondary); font-size: 0.9rem;">Monitor discussions and delete inappropriate messages.</p>
+            </div>
+
+            <div style="flex: 1; overflow-y: auto; padding: 25px; display: flex; flex-direction: column; gap: 15px;" id="chatFeed">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var msg in Model)
+                    {
+                        var isMe = msg.IsAdmin;
+
+                        <div style="max-width: 80%; @(isMe ? "align-self: flex-end;" : "align-self: flex-start;") display: flex; flex-direction: column; gap: 4px;">
+                            <div style="display: flex; align-items: baseline; gap: 10px; padding: 0 5px; @(isMe ? "flex-direction: row-reverse;" : "")">
+                                <strong style="color: @(isMe ? "var(--color-danger)" : "var(--color-text-primary)"); font-size: 0.85rem;">
+                                    @(isMe ? "Admin (" + msg.SenderName + ")" : msg.SenderName)
+                                </strong>
+                                <span style="color: var(--color-text-secondary); font-size: 0.7rem;">@msg.Timestamp.ToString("hh:mm tt")</span>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 10px; @(isMe ? "flex-direction: row-reverse;" : "")">
+                                <!-- Chat Bubble -->
+                                <div style="padding: 12px 16px; border-radius: 16px; font-size: 0.95rem; line-height: 1.4; @(isMe ? "background: rgba(230, 90, 107, 0.15); border: 1px solid var(--color-danger); border-bottom-right-radius: 4px;" : "background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.05); border-bottom-left-radius: 4px;")">
+                                    @msg.MessageText
+                                </div>
+
+                                <!-- Moderation Tools -->
+                                @using (Html.BeginForm("Delete", "ManageChat", new { id = msg.Id, clubId = activeClubId }, FormMethod.Post, new { style = "margin: 0;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn" title="Delete Message Permanently" style="background: rgba(230, 90, 107, 0.2); padding: 6px; font-size: 0.75rem;" onclick="return confirm('Delete this message permanently?');"><i class="fa-solid fa-trash" style="color: var(--color-danger);"></i></button>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div style="text-align: center; color: var(--color-text-secondary); padding: 40px;">No messages yet in this club.</div>
+                }
+            </div>
+
+            <!-- Input Area -->
+            <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);">
+                @using (Html.BeginForm("SendMessage", "ManageChat", FormMethod.Post, new { style = "display: flex; gap: 10px;", autocomplete = "off" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="clubId" value="@activeClubId" />
+                    <input type="text" name="messageText" class="form-control" placeholder="Type an official message..." required style="flex: 1; border-radius: 20px;" />
+                    <button type="submit" class="btn btn-primary" style="border-radius: 50%; width: 45px; height: 45px; padding: 0; display: grid; place-items: center; flex-shrink: 0;"><i class="fa-solid fa-paper-plane"></i></button>
+                }
+            </div>
+        }
+        else
+        {
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--color-text-secondary);">
+                <i class="fa-solid fa-comments" style="font-size: 4rem; opacity: 0.3; margin-bottom: 20px;"></i>
+                <h3 style="margin: 0 0 10px 0;">Select a Club</h3>
+                <p style="margin: 0;">Choose a club from the sidebar to view and moderate its chat.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    var chatFeed = document.getElementById("chatFeed");
+    if (chatFeed) chatFeed.scrollTop = chatFeed.scrollHeight;
+</script>

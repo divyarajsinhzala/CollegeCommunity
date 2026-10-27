@@ -1,0 +1,46 @@
+﻿@model IEnumerable<CollegeCommunity.Models.Announcement>
+@{
+    ViewBag.Title = "Manage Announcements";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <h2 style="margin: 0;"><i class="fa-solid fa-bullhorn" style="color: var(--color-accent); margin-right: 10px;"></i> Broadcasted Announcements</h2>
+        <a href="@Url.Action("Create")" class="btn btn-primary"><i class="fa-solid fa-plus"></i> New Broadcast</a>
+    </div>
+
+    <div class="list-group">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var ann in Model)
+            {
+                <div class="list-item" style="background: rgba(0,0,0,0.2); align-items: flex-start; box-shadow: none; padding: 15px 20px; border-left: 4px solid rgba(255,255,255,0.2); margin-bottom: 10px; border-radius: 8px;">
+                    <div style="flex: 1; min-width: 0;">
+                        <h4 style="margin: 0 0 5px 0; font-size: 1.1rem; color: white;">@ann.Title</h4>
+                        <p style="margin: 0 0 10px 0; font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.5;">@ann.Description</p>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <small style="color: var(--color-text-secondary); opacity: 0.8;"><i class="fa-regular fa-clock"></i> Posted on @ann.DatePosted.ToString("MMM dd, yyyy - hh:mm tt")</small>
+
+                            @using (Html.BeginForm("Delete", "ManageAnnouncements", new { id = ann.Id }, FormMethod.Post, new { style = "margin: 0;" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn" style="background: rgba(230, 90, 107, 0.15); color: var(--color-danger) !important; padding: 6px 12px; font-size: 0.85rem;" title="Delete Announcement" onclick="return confirm('Delete this announcement permanently?');">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="text-align: center; color: var(--color-text-secondary); padding: 40px;">
+                <i class="fa-solid fa-bullhorn" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                <p>No active announcements.</p>
+            </div>
+        }
+    </div>
+</div>

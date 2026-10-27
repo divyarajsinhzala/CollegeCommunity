@@ -1,0 +1,40 @@
+﻿@model IEnumerable<CollegeCommunity.Models.Announcement>
+@{
+    ViewBag.Title = "Announcements";
+    Layout = "~/Areas/Student/Views/Shared/_StudentLayout.cshtml";
+}
+
+<div class="card glass-panel" style="padding: var(--spacing-xl);">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Official Announcements</h2>
+    </div>
+
+    <div class="list-group">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var ann in Model)
+            {
+                <div class="list-item" style="padding: 20px; background: rgba(0,0,0,0.15); border-left: 4px solid var(--color-accent); border-radius: 8px; margin-bottom: 15px; box-shadow: none;">
+
+                    <div style="flex: 1; min-width: 0;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 1.1rem; color: white;">@ann.Title</h4>
+                        <p style="margin: 0 0 10px 0; color: var(--color-text-secondary); line-height: 1.5; white-space: normal;">
+                            @ann.Description
+                        </p>
+                        <div class="item-meta">
+                            <span><i class="fa-regular fa-clock"></i> @ann.DatePosted.ToString("MMM dd, yyyy")</span>
+                            <span><i class="fa-regular fa-building"></i> Administration</span>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="text-align: center; padding: 40px; color: var(--color-text-secondary);">
+                <i class="fa-solid fa-bullhorn" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                <p>No active announcements from the administration.</p>
+            </div>
+        }
+    </div>
+</div>

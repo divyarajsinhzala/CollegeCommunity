@@ -1,0 +1,60 @@
+﻿@model IEnumerable<CollegeCommunity.Models.Feedback>
+@{
+    ViewBag.Title = "Support Tickets";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="card glass-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+        <h2 style="margin: 0;"><i class="fa-solid fa-inbox" style="color: var(--color-accent); margin-right: 10px;"></i> Student Support Tickets</h2>
+    </div>
+
+    <div class="list-group">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var ticket in Model)
+            {
+                <div class="list-item" style="background: rgba(0,0,0,0.2); align-items: flex-start; box-shadow: none; padding: 20px; border-left: 4px solid @(ticket.IsResolved ? "var(--color-success)" : "var(--color-warning)"); margin-bottom: 10px; border-radius: 8px;">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <h4 style="margin: 0; font-size: 1.1rem; color: white;">@ticket.Subject</h4>
+                            <span style="background: @(ticket.IsResolved ? "rgba(56, 198, 192, 0.2)" : "rgba(244, 180, 0, 0.2)"); color: @(ticket.IsResolved ? "var(--color-success)" : "var(--color-warning)"); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">
+                                @(ticket.IsResolved ? "RESOLVED" : "PENDING")
+                            </span>
+                        </div>
+
+                        <p style="margin: 0 0 15px 0; font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.5; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 6px;">@ticket.Message</p>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <small style="color: var(--color-text-secondary);"><i class="fa-regular fa-user"></i> @ticket.Student.FirstName @ticket.Student.LastName (@ticket.Student.EnrollmentNo) • @ticket.SubmittedAt.ToString("MMM dd, hh:mm tt")</small>
+
+                            <div style="display: flex; gap: 10px;">
+                                @using (Html.BeginForm("ToggleResolve", "ManageFeedback", new { id = ticket.Id }, FormMethod.Post, new { style = "margin: 0;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn" style="background: rgba(255,255,255,0.1); padding: 6px 12px; font-size: 0.85rem;">
+                                        <i class="fa-solid @(ticket.IsResolved ? "fa-arrow-rotate-left" : "fa-check")"></i> @(ticket.IsResolved ? "Reopen" : "Mark Resolved")
+                                    </button>
+                                }
+                                @using (Html.BeginForm("Delete", "ManageFeedback", new { id = ticket.Id }, FormMethod.Post, new { style = "margin: 0;" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn" style="background: rgba(230, 90, 107, 0.15); color: var(--color-danger) !important; padding: 6px 12px; font-size: 0.85rem;" onclick="return confirm('Delete this ticket?');">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div style="text-align: center; color: var(--color-text-secondary); padding: 40px;">
+                <i class="fa-solid fa-inbox" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3;"></i>
+                <p>No support tickets found.</p>
+            </div>
+        }
+    </div>
+</div>

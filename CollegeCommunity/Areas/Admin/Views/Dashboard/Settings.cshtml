@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "System Settings";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    bool isMaintenance = ViewBag.MaintenanceMode;
+    bool isChatLocked = ViewBag.GlobalChatLock;
+}
+
+<div class="card glass-panel" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="margin: 0 0 20px 0;"><i class="fa-solid fa-gear" style="color: var(--color-accent); margin-right: 10px;"></i> System Settings</h2>
+
+    @if (TempData["SettingsMessage"] != null)
+    {
+        <div style="background: rgba(56, 198, 192, 0.15); border-left: 4px solid var(--color-success); padding: 15px; border-radius: 6px; margin-bottom: 20px; color: white;">
+            @TempData["SettingsMessage"]
+        </div>
+    }
+
+    <p style="color: var(--color-text-secondary); margin-bottom: 30px;">Manage global application states and database health.</p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+
+        <!-- Maintenance Mode Toggle -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;">
+            <div>
+                <h4 style="margin: 0 0 5px 0; color: @(isMaintenance ? "var(--color-danger)" : "white");"><i class="fa-solid fa-person-digging"></i> Maintenance Mode</h4>
+                <p style="margin: 0; font-size: 0.85rem; color: var(--color-text-secondary);">Block students from logging in. A warning will appear, but Admins bypass this block.</p>
+            </div>
+            @using (Html.BeginForm("ToggleMaintenance", "Dashboard", FormMethod.Post, new { style = "margin: 0;" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn" style="background: @(isMaintenance ? "var(--color-danger)" : "rgba(255,255,255,0.1)"); padding: 10px 20px; width: 120px; color: white;">
+                    @(isMaintenance ? "Disable" : "Enable")
+                </button>
+            }
+        </div>
+
+        <!-- NEW: Global Chat Lock Toggle -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;">
+            <div>
+                <h4 style="margin: 0 0 5px 0; color: @(isChatLocked ? "var(--color-warning)" : "white");"><i class="fa-solid fa-comment-slash"></i> Global Chat Lock</h4>
+                <p style="margin: 0; font-size: 0.85rem; color: var(--color-text-secondary);">Mute all student chatrooms. Students can read past messages but cannot send new ones.</p>
+            </div>
+            @using (Html.BeginForm("ToggleChatLock", "Dashboard", FormMethod.Post, new { style = "margin: 0;" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn" style="background: @(isChatLocked ? "var(--color-warning)" : "rgba(255,255,255,0.1)"); padding: 10px 20px; width: 120px; color: white;">
+                    @(isChatLocked ? "Unlock Chat" : "Lock Chat")
+                </button>
+            }
+        </div>
+
+        <!-- Database Maintenance -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px;">
+            <div>
+                <h4 style="margin: 0 0 5px 0; color: var(--color-danger);"><i class="fa-solid fa-database"></i> Database Cleanup</h4>
+                <p style="margin: 0; font-size: 0.85rem; color: var(--color-text-secondary);">Permanently delete all club chat messages older than 30 days to free up server storage.</p>
+            </div>
+            @using (Html.BeginForm("ClearOldChats", "Dashboard", FormMethod.Post, new { style = "margin: 0;" }))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn" style="background: rgba(230, 90, 107, 0.15); color: var(--color-danger) !important; padding: 10px 20px; width: 120px;" onclick="return confirm('Are you sure? This will permanently delete old chat records.');">
+                    Purge Data
+                </button>
+            }
+        </div>
+
+    </div>
+</div>
